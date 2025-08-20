@@ -115,7 +115,7 @@ void menuBusca(FILE *arq_eventos, FILE *arq_users, FILE *arq_hash, FILE *arq_ove
 
     printf("\n=== MENU BUSCA ===\n");
     printf("1 - Busca Sequencial\n");
-    printf("2 - Busca Binária\n");
+    printf("2 - Busca Binaria\n");
     printf("3 - Busca Hash (Usuarios)\n");
     printf("Escolha: ");
     scanf("%d", &esc);
@@ -234,29 +234,29 @@ void menuBusca(FILE *arq_eventos, FILE *arq_users, FILE *arq_hash, FILE *arq_ove
                 free(userEncontrado);
             }
             else{
-                printf("Usuario com ID %d não encontrado.\n", id);
+                printf("Usuario com ID %d nao encontrado.\n", id);
             }
             pausarTela();
         }
         else if (esc01 == 2){
-            printf("Cadastro rápido:\n");
+            printf("Cadastro rapido:\n");
             cadastrarUsuario(arq_users, "NovoUser", "email@teste.com", "123", "(00)00000-0000", "000.000.000-00", 1);
             rewind(arq_users);
             User *ultimo = lerUsuario(arq_users); // pega último inserido
             inserirUsuario_Hash(arq_hash, arq_overflow, ultimo);
             free(ultimo);
-            printf("Usuário inserido na Hash!\n");
+            printf("Usuario inserido na Hash!\n");
             pausarTela();
         }
         else if (esc01 == 3){
-            printf("Digite o id para a remoção: ");
+            printf("Digite o id para a remocao: ");
             scanf("%d", &id);
             userEncontrado = buscarUsuario_Hash(arq_hash, arq_overflow, id);
             if(userEncontrado != NULL) {
                 printf("Usuario encontado: \n");
                 imprimirUser(userEncontrado);
                 removerUsuario_Hash(arq_hash, arq_overflow, id);
-                printf("Usario com id %d removido!", id);
+                printf("Usuario com id %d removido!", id);
                 free(userEncontrado);
             }
             pausarTela();
@@ -267,7 +267,7 @@ void menuBusca(FILE *arq_eventos, FILE *arq_users, FILE *arq_hash, FILE *arq_ove
 void login_logout(FILE *arq_users, User *usuarioLogado){
     int esc02;
 
-    printf("OPÇÕES - LOGIN/LOGOUT\n");
+    printf("OPCOES - LOGIN/LOGOUT\n");
     printf("1 - Login\n2 - Cadastrar\n3 - Logout\n");
     printf("Escolha: ");
     scanf("%d", &esc02);

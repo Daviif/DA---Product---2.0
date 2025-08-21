@@ -95,9 +95,19 @@ void menuOrdenacao(FILE *arq_eventos, FILE *arq_users, FILE *log, int memDisponi
             printf("Agora a base ordenada!\n");
             printf("==========================================\n");
             rewind(arq_users);
-            int total_users = tamanho_arquivoEv(arq_users);
+            // CORREÇÃO: Certifique-se de usar a função correta para contar usuários
+            int total_users = tamanho_arquivoUs(arq_users);
+            printf("Debug: Total de usuários encontrados: %d\n", total_users);
+            
+            // Verifica se há usuários para ordenar
+            if (total_users <= 0) {
+                printf("Erro: Nenhum usuário encontrado no arquivo!\n");
+                pausarTela();
+                return;
+            }
             heapSort(arq_users, total_users, TIPO_User, &comp, &tro, log);
-            imprimirBaseEvento(arq_users);
+            rewind(arq_users);
+            imprimirBaseUser(arq_users);
             
             pausarTela(); 
         }
@@ -153,7 +163,7 @@ void menuBusca(FILE *arq_eventos, FILE *arq_users, FILE *arq_hash, FILE *arq_ove
                 printf("Id de numero %d nao encontrado.", id);
                 printf("Tente novamente");
             }
-            imprimirEvento(ev);
+            imprimirUser(us);
             pausarTela(); 
         }
         else{
@@ -194,7 +204,7 @@ void menuBusca(FILE *arq_eventos, FILE *arq_users, FILE *arq_hash, FILE *arq_ove
             printf("Você escolheu Usuarios!\n");
             printf("A base tem que estar ordenada!\nOrdenando...\n");
                                     
-            int total_users = tamanho_arquivoEv(arq_users);
+            int total_users = tamanho_arquivoUs(arq_users);
             heapSort(arq_users, total_users, TIPO_User, &comp, &tro, log);
             printf("Ordenado!\nAgora informe o ID do evento: ");
             scanf("%d", &id);
@@ -264,7 +274,7 @@ void menuBusca(FILE *arq_eventos, FILE *arq_users, FILE *arq_hash, FILE *arq_ove
     }
 }
 
-void login_logout(FILE *arq_users, User *usuarioLogado){
+User *login_logout(FILE *arq_users, User *usuarioLogado){
     int esc02;
 
     printf("OPÇÕES - LOGIN/LOGOUT\n");
@@ -301,7 +311,6 @@ void login_logout(FILE *arq_users, User *usuarioLogado){
         printf("Informe os dados para o cadastro: \n"); 
         printf("Nome: Davi | Email: davi@email.com | Senha: davi123 | Telefone: (31) 99999-9999 | CPF: 111.222.333-00 | Tipo: Produtor"); 
         cadastrarUsuario(arq_users, "Davi", "davi@email.com", "davi123", "(31) 99999-9999", "111.222.333-00", 0); 
-        imprimirBaseUser(arq_users); 
         pausarTela();
     }
     else if (esc02 == 3){
@@ -316,6 +325,8 @@ void login_logout(FILE *arq_users, User *usuarioLogado){
 
     pausarTela();
     }
+
+    return usuarioLogado;
 }
 
 void menuEventosVisitantes(FILE *arq_eventos) {

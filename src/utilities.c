@@ -70,7 +70,14 @@ int tamanho_registroEv() {
 }
 
 int tamanho_registroUs() {
-    return sizeof(User);
+    return sizeof(int) +
+           sizeof(char) * 100 +
+           sizeof(char) * 100 +
+           sizeof(char) * 50 +
+           sizeof(char) * 11 +
+           sizeof(char) * 11 +
+           sizeof(Tipo) +
+           sizeof(long);
 }
 
 size_t tamanhoRegistro(int tipoRegistro){
@@ -87,10 +94,10 @@ int tamanho_arquivoEv(FILE *arq)
     return tam;
 }
 
-int tamanho_arquivoUs(FILE *arq)
-{
+int tamanho_arquivoUs(FILE *arq) {
     fseek(arq, 0, SEEK_END);
-    int tam = trunc(ftell(arq) / tamanho_registroUs());
+    long bytes = ftell(arq);
+    int tam = bytes / tamanho_registroUs(); // divide bytes pelo tamanho do struct
     return tam;
 }
 

@@ -64,7 +64,7 @@ int main()
         exit(1);
     }
 
-    int tamEv = 2000, tamUs = 150;
+    int tamEv = 20, tamUs = 15;
     int memDisponivel = 10;// Memória disponível para o reservatório
     int comp, tro;//comparações e trocas
 
@@ -94,7 +94,7 @@ int main()
 
         switch (opcao){
             case 1:
-                login_logout(arq_users, usuarioLogado);
+                usuarioLogado = login_logout(arq_users, usuarioLogado);
                 break;
             case 2:
                 menuBusca(arq_eventos, arq_users, arq_hash, arq_overflow, log, comp, tro);
@@ -104,12 +104,16 @@ int main()
                 break;
             case 4:
                 menuEventos(usuarioLogado, arq_eventos, arq_carrinho, log);
+                break;
             case 5:
                 menuCarrinho(arq_carrinho, arq_ingressos, usuarioLogado);
+                break;
             case 6:
                 menuIngressos(arq_ingressos, usuarioLogado);
+                break;
             case 7:
                 printf("Saindo...\n");
+                break;
             default:
                 printf("Opcao invalida!\n");
                 pausarTela();

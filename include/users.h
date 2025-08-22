@@ -19,7 +19,7 @@ typedef struct{
     char nome[100];
     char email[100];
     char senha[50];
-    char telefone[11];
+    char telefone[20];
     char cpf[11];
     Tipo tipo;
     long proximo;

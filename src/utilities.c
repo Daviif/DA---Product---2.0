@@ -74,7 +74,7 @@ int tamanho_registroUs() {
            sizeof(char) * 100 +
            sizeof(char) * 100 +
            sizeof(char) * 50 +
-           sizeof(char) * 11 +
+           sizeof(char) * 20 +
            sizeof(char) * 11 +
            sizeof(Tipo) +
            sizeof(long);

@@ -1,0 +1,16 @@
+
+--------------1 Execução----------------
+Algoritmo: Seleção com Substituição (Corridas de Eventos)
+Tempo de Execução: 0.000147 segundos
+Comparações: 155
+Número de corridas geradas: 1
+Arquivos gerados: run_eventos_0.dat, ...
+------------------------------
+
+------------------------------
+Algoritmo: Intercalação Ótima (Cópia Simples)
+Registros copiados: 20
+Arquivo de saída: eventos_ordenados.dat
+------------------------------
+
+Tempo total de ordenacao: 0.000289 segundos

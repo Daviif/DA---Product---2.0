@@ -64,6 +64,7 @@ void heapify(FILE *arq, int n, int i, int tipoRegistro, int *c, int *t){
         (*c)++;
         if (obterId(reg_dir, tipoRegistro) > obterId(reg_maior, tipoRegistro)) {
             maior = dir;
+            memcpy(reg_maior, reg_dir, tamanho);
         }
     }
 

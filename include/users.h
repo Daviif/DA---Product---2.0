@@ -39,6 +39,6 @@ void imprimirUser(User *us);
 
 void imprimirBaseUser(FILE *out);
 
-void *cadastrarUsuario(FILE *out, char *nome, char *email, char *senha, char *telefone, char *cpf, Tipo Usuario);
+void cadastrarUsuario(FILE *out, char *nome, char *email, char *senha, char *telefone, char *cpf, Tipo Usuario);
 
 #endif

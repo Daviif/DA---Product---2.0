@@ -250,12 +250,42 @@ void menuBusca(FILE *arq_eventos, FILE *arq_users, FILE *arq_hash, FILE *arq_ove
         }
         else if (esc01 == 2){
             printf("Cadastro rapido:\n");
+            fseek(arq_users, 0, SEEK_END);
+            long posAntes = ftell(arq_users); // Guarda a posição antes do cadastro
+
             cadastrarUsuario(arq_users, "NovoUser", "email@teste.com", "123", "(00)00000-0000", "000.000.000-00", 1);
-            rewind(arq_users);
-            User *ultimo = lerUsuario(arq_users); // pega último inserido
-            inserirUsuario_Hash(arq_hash, arq_overflow, ultimo);
+            fflush(arq_users); 
+
+            fseek(arq_users, 0, SEEK_END);
+            long posDepois = ftell(arq_users);// Guarda a posição depois do cadastro
+
+            //Use os bytes realmente adicionados, não sizeof(User)
+            long bytesReais = posDepois - posAntes;   
+            User *ultimo = malloc(sizeof(User));
+            memset(ultimo, 0, sizeof(User)); //Limpa a estrutura
+
+            // Lê da posição inicial (posAntes) com o tamanho real
+            fseek(arq_users, posAntes, SEEK_SET);
+
+            // Se os 297 bytes são exatamente um User
+            if (bytesReais <= sizeof(User)) {
+                size_t bytesLidos = fread(ultimo, bytesReais, 1, arq_users);
+                
+                if (bytesLidos == 1) {
+                    if (ultimo->id > 0 && ultimo->id < 10000) {
+                        inserirUsuario_Hash(arq_hash, arq_overflow, ultimo);
+                        printf("Usuario inserido na Hash com ID: %d!\n", ultimo->id);
+                    } else {
+                        printf("[ERRO] ID invalido: %d\n", ultimo->id);
+                    }
+                } else {
+                    printf("[ERRO] Falha na leitura!\n");
+                }
+            } else {
+                printf("[ERRO] Tamanho incompativel: bytes=%ld, sizeof(User)=%zu\n", bytesReais, sizeof(User));
+            }
+
             free(ultimo);
-            printf("Usuario inserido na Hash!\n");
             pausarTela();
         }
         else if (esc01 == 3){

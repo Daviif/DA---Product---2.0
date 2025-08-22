@@ -59,14 +59,13 @@ int main()
         ERROR("Erro ao abrir arquivo hash.");
         exit(1);
     }
-    if ((arq_overflow = fopen(OVERFLOW_FILE, "wb+")) == NULL) { // wb+ para criar se não existir
-        ERROR("Erro ao abrir arquivo de overflow.");
-        exit(1);
+    if ((arq_overflow = fopen(OVERFLOW_FILE, "rb+")) == NULL) { // wb+ para criar se não existir
+        arq_overflow = fopen(OVERFLOW_FILE, "wb+");
     }
 
     int tamEv = 20, tamUs = 15;
     int memDisponivel = 10;// Memória disponível para o reservatório
-    int comp, tro;//comparações e trocas
+    int comp = 0, tro = 0;//comparações e trocas
 
     criarBaseEventos(arq_eventos, tamEv);
     criarBaseUsuarios(arq_users, tamUs);
@@ -97,6 +96,7 @@ int main()
                 usuarioLogado = login_logout(arq_users, usuarioLogado);
                 break;
             case 2:
+                rewind(arq_users);
                 menuBusca(arq_eventos, arq_users, arq_hash, arq_overflow, log, comp, tro);
                 break;
             case 3:
@@ -111,7 +111,7 @@ int main()
             case 6:
                 menuIngressos(arq_ingressos, usuarioLogado);
                 break;
-            case 7:
+            case 0:
                 printf("Saindo...\n");
                 break;
             default:
@@ -119,6 +119,6 @@ int main()
                 pausarTela();
                 break;
         }
-    } while (opcao != 7);
+    } while (opcao != 0);
         
 }

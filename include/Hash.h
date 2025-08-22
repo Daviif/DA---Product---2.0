@@ -19,7 +19,7 @@ typedef struct {
     int colisoes;
 } HashTable;
 
-HashTable *criarTabelaHash(char* hashFileName);
+void criarTabelaHash(char* hashFileName);
 int funcaoHash(int id);
 User *buscarUsuario_Hash(FILE *hashFile, FILE *overflowFile, int id);
 void inserirUsuario_Hash(FILE *hashFile, FILE *overflowFile, User *us);

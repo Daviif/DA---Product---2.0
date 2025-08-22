@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-HashTable *criarTabelaHash(char* hashFileName){
+void criarTabelaHash(char* hashFileName){
     FILE *arq_Hash = fopen(hashFileName, "wb");
     if (!arq_Hash) {
         perror("Nao foi possivel criar o arquivo de hash");
@@ -37,18 +37,27 @@ User *buscarUsuario_Hash(FILE *hashFile, FILE *overflowFile, int id){
         free(address);
         return NULL;
     }
-    
+
+    if(address->id == -1) {
+        free(address);
+        return NULL;
+    }
+    User atual = *address;
 
     // Percorre a lista encadeada (address principal + overflow)
-    while (address != NULL) {
-        if (address->id == id) {
+    while (1) {
+        if (atual.id == -1) {
+            break; // Fim da busca, não encontrado
+        }
+        if (atual.id == id) {
+            *address = atual;
             return address;
         }
-        if (address->proximo == -1) {
+        if (atual.proximo == -1) {
             break;
         }
-        fseek(overflowFile, address->proximo, SEEK_SET);
-        if (fread(address, sizeof(User), 1, overflowFile) != 1){
+        fseek(overflowFile, atual.proximo, SEEK_SET);
+        if (fread(&atual, sizeof(User), 1, overflowFile) != 1){
             break;
         }
     }
@@ -62,6 +71,7 @@ void inserirUsuario_Hash(FILE *hashFile, FILE *overflowFile, User *us){
   
     int indice = funcaoHash(us -> id);
     long posicaoAddress = (long)indice * sizeof(User);
+    long novaPosicaoOverflow;
 
     fseek(hashFile, posicaoAddress, SEEK_SET);
     User address;
@@ -72,7 +82,20 @@ void inserirUsuario_Hash(FILE *hashFile, FILE *overflowFile, User *us){
     if (address.id == -1){
         fseek(hashFile, posicaoAddress, SEEK_SET);
         fwrite(us, sizeof(User), 1, hashFile);
+        fflush(hashFile);
+
+        printf("[DEBUG] Usuario %d inserido direto no bucket %d (pos=%ld)\n",
+               us ->id, indice, posicaoAddress);
         return;
+    }
+    else{
+        fseek(overflowFile, 0, SEEK_END);
+        novaPosicaoOverflow = ftell(overflowFile);
+        fwrite(us, sizeof(User), 1, overflowFile);
+        fflush(overflowFile);
+
+        printf("[DEBUG] Colisão para usuario %d no bucket %d\n", us->id, address);
+        printf("        Usuario foi gravado no overflow (pos=%ld)\n", novaPosicaoOverflow);
     }
 
     User atual = address;
@@ -86,13 +109,12 @@ void inserirUsuario_Hash(FILE *hashFile, FILE *overflowFile, User *us){
         fread(&atual, sizeof(User), 1, overflowFile);
     }
 
-    fseek(overflowFile, 0, SEEK_END);
-    long novaPosicaoOverflow = ftell(overflowFile);
-    fwrite(us, sizeof(User), 1, overflowFile);
+    
 
     atual.proximo = novaPosicaoOverflow;
     fseek(arqAtual, posicaoAtual, SEEK_SET);
     fwrite(&atual, sizeof(User), 1, arqAtual);
+    fflush(arqAtual);
 }
 
 void removerUsuario_Hash(FILE *hashFile, FILE *overflowFile, int id){

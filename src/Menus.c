@@ -226,7 +226,7 @@ void menuBusca(FILE *arq_eventos, FILE *arq_users, FILE *arq_hash, FILE *arq_ove
     }
     else if (esc == 3) {
         int esc01;
-        limpar_tela_ansi();
+        // limpar_tela_ansi();
         printf("----------------- OPCOES HASH -----------------\n");
         printf("1 - Buscar\n");
         printf("2 - Inserir\n");

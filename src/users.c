@@ -20,6 +20,7 @@ User *CriarUsuario(int id, char *nome, char *email, char *senha, char *telefone,
     strncpy(us->cpf, cpf, sizeof(us->cpf) - 1);
     us->cpf[sizeof(us->cpf) - 1] = '\0';
     us->tipo = usuario;
+    us->proximo = 0;
 
     return us;
 }
@@ -33,6 +34,8 @@ void salvarUsuario(User *us, FILE *out)
     fwrite(us->telefone, sizeof(char), sizeof(us->telefone), out);
     fwrite(us->cpf, sizeof(char), sizeof(us->cpf), out);
     fwrite(&us->tipo, sizeof(Tipo), 1, out);
+     long proximo = 0;
+    fwrite(&proximo, sizeof(long), 1, out);
 }
 
 User *lerUsuario(FILE *in)
@@ -52,6 +55,7 @@ User *lerUsuario(FILE *in)
     fread(us->telefone, sizeof(char), sizeof(us->telefone), in);
     fread(us->cpf, sizeof(char), sizeof(us->cpf), in);
     fread(&us->tipo, sizeof(Tipo), 1, in);
+    fread(&us->proximo, sizeof(long), 1, in);
     return us;
 }
 
@@ -152,20 +156,40 @@ void imprimirBaseUser(FILE *out)
     }
 }
 
-void *cadastrarUsuario(FILE *out, char *nome, char *email, char *senha, char *telefone, char *cpf, Tipo Usuario)
+void cadastrarUsuario(FILE *out, char *nome, char *email, char *senha, char *telefone, char *cpf, Tipo Usuario)
 {
+    if (!out) {
+        printf("Erro: Arquivo de saída inválido!\n");
+        return;
+    }
+    
     int novoId = gerarIdUnico(out, tamanho_registroUs());
+    printf("Debug: Novo ID gerado: %d\n", novoId);
+    
     User *us = CriarUsuario(novoId, nome, email, senha, telefone, cpf, Usuario);
-
-    fseek(out, 0, SEEK_END);
 
     if (us)
     {
+        fseek(out, 0, SEEK_END);
+        long posicao = ftell(out);
+        printf("Debug: Posição no arquivo antes de salvar: %ld\n", posicao);
+        
         salvarUsuario(us, out);
-        printf("\nUsuario '%s' cadastrado com sucesso com o ID: %d\n", us->nome, us->id);
+        
+         fflush(out);
+        long posicaoApos = ftell(out);
+        printf("Debug: Posição no arquivo após salvar: %ld\n", posicaoApos);
+        
+        if (posicaoApos > posicao) {
+            printf("\nUsuario '%s' cadastrado com sucesso com o ID: %d\n", us->nome, us->id);
+        } else {
+            printf("\nErro: Falha ao salvar usuário no arquivo!\n");
+        }
+        
         free(us);
+    } else {
+        printf("Erro: Falha ao criar usuário!\n");
     }
-    return NULL;
 }
 
 User *loginPorEmailSenha(FILE *in, const char *email, const char *senha)

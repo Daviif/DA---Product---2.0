@@ -128,6 +128,10 @@ int gerarIdUnico(FILE *in, size_t tamanhoRegistro)
     }
 
     free(registro);
+    
+     if (maiorId == 0 && ftell(in) == 0) {
+        return 1;
+    }
+    
     return maiorId + 1;
-
 }

@@ -60,8 +60,8 @@ User *buscarUsuario_Hash(FILE *hashFile, FILE *overflowFile, int id){
 
 void inserirUsuario_Hash(FILE *hashFile, FILE *overflowFile, User *us){
     User *jaExiste = buscarUsuario_Hash(hashFile, overflowFile, us -> id);
-    if(jaExiste != NULL){
-        printf("Erro: Usuario com ID %d ja existe.\n", us->id);
+    if(jaExiste == NULL){
+        printf("Erro ao cadastrar usuário...\n");
         free(jaExiste);
         return;
     }

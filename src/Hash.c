@@ -84,8 +84,6 @@ void inserirUsuario_Hash(FILE *hashFile, FILE *overflowFile, User *us){
         fwrite(us, sizeof(User), 1, hashFile);
         fflush(hashFile);
 
-        printf("[DEBUG] Usuario %d inserido direto no bucket %d (pos=%ld)\n",
-               us ->id, indice, posicaoAddress);
         return;
     }
     else{
@@ -94,8 +92,6 @@ void inserirUsuario_Hash(FILE *hashFile, FILE *overflowFile, User *us){
         fwrite(us, sizeof(User), 1, overflowFile);
         fflush(overflowFile);
 
-        printf("[DEBUG] Colisão para usuario %d no bucket %d\n", us->id, address);
-        printf("        Usuario foi gravado no overflow (pos=%ld)\n", novaPosicaoOverflow);
     }
 
     User atual = address;

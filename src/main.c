@@ -63,7 +63,7 @@ int main()
         arq_overflow = fopen(OVERFLOW_FILE, "wb+");
     }
 
-    int tamEv = 20, tamUs = 15;
+    int tamEv = 20, tamUs = 110;
     int memDisponivel = 10;// Memória disponível para o reservatório
     int comp = 0, tro = 0;//comparações e trocas
 

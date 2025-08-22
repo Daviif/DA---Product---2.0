@@ -97,7 +97,7 @@ void menuOrdenacao(FILE *arq_eventos, FILE *arq_users, FILE *log, int memDisponi
             rewind(arq_users);
             // CORREÇÃO: Certifique-se de usar a função correta para contar usuários
             int total_users = tamanho_arquivoUs(arq_users);
-            printf("Debug: Total de usuários encontrados: %d\n", total_users);
+            
             
             // Verifica se há usuários para ordenar
             if (total_users <= 0) {
